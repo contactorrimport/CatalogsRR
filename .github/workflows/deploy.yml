@@ -2,7 +2,7 @@ name: Deploy static site to Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          # Esta es la parte clave: le dice que solo suba la carpeta 'public'
+          path: 'public'
 
       - name: Deploy to GitHub Pages
         id: deployment
