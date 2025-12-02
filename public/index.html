@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RRIMPORT | Catálogo Hilux 2021-2023</title>
+  <meta name="description" content="Catálogo interactivo de carrocería e iluminación RRIMPORT para Toyota Hilux 2021-2023." />
+  <link rel="preconnect" href="https://esm.sh" />
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-gray-900">
+  <div id="root"></div>
+
+  <script type="module">
+    import React, { useEffect, useState } from 'https://esm.sh/react@18.3.1';
+    import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
+    import {
+      ShoppingCart,
+      Menu,
+      X,
+      Phone,
+      ArrowRight,
+      ShieldCheck,
+      Truck,
+      Trash2,
+      CheckCircle,
+      Zap
+    } from 'https://esm.sh/lucide-react@0.424.0?dev';
+
+    const CatalogApp = () => {
+      const [activePage, setActivePage] = useState('home');
+      const [cart, setCart] = useState([]);
+      const [isMenuOpen, setIsMenuOpen] = useState(false);
+      const [notification, setNotification] = useState(null);
+
+      useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, [activePage]);
+
+      const products = {
+        frontLight: [
+          {
+            id: 'f-led',
+            name: 'Faros Delanteros Full LED',
+            price: 2015,
+            desc: 'Proyección dual con DRL (Luz diurna). Estética agresiva "Black Edition".',
+            specs: ['Tecnología: LED Projector', 'Lúmenes: 6000lm', 'Instalación: Plug & Play'],
+            tag: 'Premium',
+            imageType: 'headlight'
+          },
+          {
+            id: 'f-hal',
+            name: 'Faros Delanteros Halógenos',
+            price: 1105,
+            desc: 'Reemplazo original OEM. Óptica clara de policarbonato reforzado.',
+            specs: ['Tecnología: Halógeno H4', 'Material: Policarbonato', 'Ajuste: Original'],
+            tag: 'Standard',
+            imageType: 'headlight-basic'
+          },
+          {
+            id: 'neb',
+            name: 'Juego de Neblineros LED',
+            price: 351,
+            desc: 'Kit completo para parachoques bajo. Incluye ramal y switch.',
+            specs: ['Incluye: 2 faros, cableado', 'Luz: Blanco Frío 6000K', 'Montaje: OEM'],
+            tag: 'Kit',
+            imageType: 'fog'
+          }
+        ],
+        rearLight: [
+          {
+            id: 'r-led',
+            name: 'Faros Posteriores LED (Par)',
+            price: 780,
+            desc: 'Diseño ahumado o rojo intenso con encendido secuencial dinámico.',
+            specs: ['Estilo: TRD / Revo', 'Resistencia: IP67', 'Voltaje: 12V'],
+            tag: 'Best Seller',
+            imageType: 'taillight'
+          },
+          {
+            id: 'r-norm',
+            name: 'Faros Posteriores Standard',
+            price: 494,
+            desc: 'Diseño clásico de fábrica. Ideal para flotas mineras y trabajo.',
+            specs: ['Tipo: Bombilla convencional', 'Color: Rojo/Cristal', 'Homologación: OEM'],
+            tag: 'Básico',
+            imageType: 'taillight-basic'
+          }
+        ],
+        frontBody: [
+          {
+            id: 'mask',
+            name: 'Máscara Cromada',
+            price: 364,
+            desc: 'Parrilla frontal con acabado cromado tricapa de alta durabilidad.',
+            specs: ['Acabado: Cromo Espejo', 'Compatibilidad: 2021-2023', 'Logo: Base incluida'],
+            tag: 'Estético',
+            imageType: 'grille'
+          },
+          {
+            id: 'bump-f',
+            name: 'Parachoque Delantero',
+            price: 325,
+            desc: 'Pieza de ABS lista para matizar y pintar al color de la carrocería.',
+            specs: ['Color: Negro base (Primer)', 'Material: ABS flexible', 'Absorción: Estándar'],
+            tag: 'Carrocería',
+            imageType: 'bumper-f'
+          },
+          {
+            id: 'rej-par',
+            name: 'Rejilla de Parachoque (Par)',
+            price: 117,
+            desc: 'Insertos inferiores laterales negros para ventilación.',
+            specs: ['Material: Plástico mate', 'Ubicación: Inferior', 'Función: Ventilación'],
+            tag: 'Repuesto',
+            imageType: 'grid'
+          }
+        ],
+        rearBody: [
+          {
+            id: 'bump-r',
+            name: 'Parachoque Posterior',
+            price: 715,
+            desc: 'Parachoque metálico cromado con pisaderas antideslizantes reforzadas.',
+            specs: ['Material: Acero cromado', 'Pisaderas: ABS reforzado', 'Soportes: Incluidos'],
+            tag: 'Heavy Duty',
+            imageType: 'bumper-r'
+          }
+        ],
+        hood: [
+          {
+            id: 'capot',
+            name: 'Capot (Bonete)',
+            price: 715,
+            desc: 'Lámina de acero con tratamiento anticorrosivo cataforesis.',
+            specs: ['Material: Acero estampado', 'Peso: OEM Spec', 'Tratamiento: Cataforesis'],
+            tag: 'Estructural',
+            imageType: 'hood'
+          },
+          {
+            id: 'vicel',
+            name: 'Bisel de Capot',
+            price: 221,
+            desc: 'Moldura decorativa frontal superior. Dale un look agresivo.',
+            specs: ['Acabado: Cromado / Negro', 'Fijación: Adhesivo 3M', 'Estilo: GR Sport'],
+            tag: 'Accesorio',
+            imageType: 'trim'
+          }
+        ],
+        mirrors: [
+          {
+            id: 'mirror',
+            name: 'Espejos con LED Cromados',
+            price: 650,
+            desc: 'Espejos laterales abatibles con luz direccional integrada.',
+            specs: ['Funciones: Eléctrico + Luz', 'Carcasa: Cromada', 'Abatible: Eléctrico'],
+            tag: 'Upgrade',
+            imageType: 'mirror'
+          }
+        ]
+      };
+
+      const pages = [
+        { id: 'home', title: 'Inicio' },
+        { id: 'frontLight', title: 'Iluminación Frontal' },
+        { id: 'rearLight', title: 'Iluminación Trasera' },
+        { id: 'frontBody', title: 'Frontal' },
+        { id: 'rearBody', title: 'Posterior' },
+        { id: 'hood', title: 'Capot' },
+        { id: 'mirrors', title: 'Espejos' },
+        { id: 'contact', title: 'Carrito' }
+      ];
+
+      const addToCart = (item) => {
+        setCart((prev) => [...prev, { ...item, cartId: Date.now() + Math.random() }]);
+        showNotification(`Agregado: ${item.name}`);
+      };
+
+      const removeFromCart = (cartId) => {
+        setCart((prev) => prev.filter((item) => item.cartId !== cartId));
+      };
+
+      const showNotification = (msg) => {
+        setNotification(msg);
+        setTimeout(() => setNotification(null), 3000);
+      };
+
+      const calculateTotal = () => cart.reduce((acc, item) => acc + item.price, 0);
+
+      const generateWhatsAppLink = () => {
+        const phoneNumber = '51999999999';
+        let message = 'Hola RRIMPORT, me gustaría cotizar los siguientes repuestos:%0A%0A';
+        cart.forEach((item) => {
+          message += `- ${item.name}: S/ ${item.price}%0A`;
+        });
+        message += `%0A*Total Estimado: S/ ${calculateTotal()}*`;
+        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+      };
+
+      const ProductIcon = ({ type }) => (
+        <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center border-4 border-gray-100 shadow-inner">
+          {type.includes('led') && (
+            <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center">
+              <Zap size={24} className="text-white" />
+            </div>
+          )}
+          {type.includes('hal') && <div className="w-16 h-16 bg-gray-200 rounded-full" />}
+          {type.includes('chrome') && <div className="w-16 h-16 bg-gradient-to-tr from-gray-300 to-white rounded-full" />}
+          {!type.includes('led') && !type.includes('hal') && !type.includes('chrome') && (
+            <div className="w-16 h-16 bg-gray-100 rounded-full" />
+          )}
+        </div>
+      );
+
+      const ProductCard = ({ item }) => (
+        <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden flex flex-col transform hover:-translate-y-1">
+          <div className="h-56 bg-gray-50 flex items-center justify-center relative p-6">
+            <ProductIcon type={item.id} />
+            <span className="absolute top-4 right-4 bg-black text-white text-xs px-3 py-1 font-bold tracking-wider">
+              {item.tag}
+            </span>
+          </div>
+
+          <div className="p-6 flex flex-col flex-grow relative">
+            <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-red-700 transition-colors">
+              {item.name}
+            </h3>
+            <p className="text-sm text-gray-500 mb-4 line-clamp-2">{item.desc}</p>
+
+            <div className="mt-auto">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {item.specs.slice(0, 2).map((spec, idx) => (
+                  <span
+                    key={idx}
+                    className="text-[10px] uppercase tracking-wide bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200"
+                  >
+                    {spec.split(':')[0]}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-400 font-medium">Precio Unitario</span>
+                  <span className="text-xl font-black text-gray-900">S/ {item.price.toLocaleString()}</span>
+                </div>
+                <button
+                  onClick={() => addToCart(item)}
+                  className="bg-black hover:bg-red-700 text-white p-3 rounded-lg transition-all shadow-lg hover:shadow-red-200 active:scale-95"
+                  aria-label="Agregar al carrito"
+                >
+                  <ShoppingCart size={20} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+      return (
+        <div className="min-h-screen bg-white font-sans text-gray-900 pb-20 md:pb-0">
+          {notification && (
+            <div className="fixed top-24 right-4 z-[60] bg-black text-white px-6 py-3 shadow-2xl flex items-center animate-fade-in-down border-l-4 border-red-600">
+              <CheckCircle size={18} className="text-white mr-2" />
+              <span className="font-medium text-sm">{notification}</span>
+            </div>
+          )}
+
+          <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-200 transition-all duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+              <div
+                className="flex items-center space-x-2 cursor-pointer group"
+                onClick={() => setActivePage('home')}
+              >
+                <div className="bg-black text-white p-2 rounded-sm transform group-hover:scale-105 transition-transform">
+                  <span className="font-black text-xl italic tracking-tighter">RR</span>
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="text-xl font-black tracking-tighter text-black italic">RR</span>
+                  <span className="text-[10px] font-bold tracking-[0.25em] text-black">IMPORT</span>
+                </div>
+              </div>
+
+              <div className="hidden lg:flex space-x-2">
+                {pages.slice(0, 7).map((page) => (
+                  <button
+                    key={page.id}
+                    onClick={() => setActivePage(page.id)}
+                    className={`px-4 py-2 text-sm font-bold uppercase tracking-wide transition-all border-b-2 ${
+                      activePage === page.id
+                        ? 'border-red-600 text-black'
+                        : 'border-transparent text-gray-500 hover:text-black hover:border-gray-300'
+                    }`}
+                  >
+                    {page.title}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  className={`relative p-2 transition-colors ${
+                    activePage === 'contact' ? 'text-red-600' : 'text-black hover:bg-gray-100'
+                  }`}
+                  onClick={() => setActivePage('contact')}
+                  aria-label="Ver carrito"
+                >
+                  <ShoppingCart className="w-6 h-6" />
+                  {cart.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] w-5 h-5 flex items-center justify-center font-bold">
+                      {cart.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  className="lg:hidden p-2 hover:bg-gray-100"
+                  onClick={() => setIsMenuOpen((prev) => !prev)}
+                  aria-label="Abrir menú"
+                >
+                  {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+              </div>
+            </div>
+
+            <div
+              className={`lg:hidden bg-white border-b border-gray-200 absolute w-full transition-all duration-300 ease-in-out overflow-hidden ${
+                isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
+              <div className="px-4 py-4 space-y-1">
+                {pages.map((page) => (
+                  <button
+                    key={page.id}
+                    onClick={() => {
+                      setActivePage(page.id);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`block w-full text-left px-4 py-3 text-sm font-bold uppercase tracking-wide ${
+                      activePage === page.id ? 'bg-black text-white' : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {page.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </nav>
+
+          <main className="pt-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen flex flex-col">
+            {activePage === 'home' && (
+              <div className="flex-grow flex flex-col animate-fade-in">
+                <div className="relative bg-black rounded-none overflow-hidden shadow-2xl min-h-[550px] flex items-center border-b-4 border-red-600">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 via-black to-black opacity-80 z-0" />
+                  <div
+                    className="absolute inset-0 opacity-10"
+                    style={{
+                      backgroundImage: 'radial-gradient(#444 1px, transparent 1px)',
+                      backgroundSize: '20px 20px'
+                    }}
+                  />
+
+                  <div className="relative z-10 px-8 md:px-16 max-w-4xl py-12">
+                    <div className="inline-flex items-center space-x-3 bg-white px-4 py-1 mb-8 transform -skew-x-12">
+                      <span className="text-black text-sm font-black tracking-widest uppercase transform skew-x-12">
+                        Catálogo 2025
+                      </span>
+                    </div>
+
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-none tracking-tighter">
+                      RR<span className="text-stroke-white text-transparent">IMPORT</span>
+                    </h1>
+
+                    <p className="text-gray-300 text-xl md:text-2xl mb-10 max-w-lg font-light border-l-4 border-red-600 pl-6">
+                      Especialistas en carrocería e iluminación automotriz. <br />
+                      <strong className="text-white">Toyota Hilux 2021-2023</strong>
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <button
+                        onClick={() => setActivePage('frontLight')}
+                        className="bg-red-600 text-white px-10 py-4 font-bold uppercase tracking-widest flex items-center justify-center hover:bg-red-700 transition-all"
+                      >
+                        Ver Productos <ArrowRight className="ml-2" size={20} />
+                      </button>
+                      <button
+                        onClick={() => setActivePage('contact')}
+                        className="bg-transparent border-2 border-white text-white px-10 py-4 font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                      >
+                        Cotizar Ahora
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-0 mt-12 mb-12 border border-gray-200 bg-gray-50">
+                  {[
+                    { icon: ShieldCheck, title: 'CALIDAD GARANTIZADA', desc: 'Productos de alto performance' },
+                    { icon: Truck, title: 'ENVÍOS NACIONALES', desc: 'Despacho inmediato a todo Perú' },
+                    { icon: Phone, title: 'SOPORTE EXPERTO', desc: 'Asesoría técnica especializada' }
+                  ].map((feat, idx) => (
+                    <div
+                      key={idx}
+                      className="p-10 flex flex-col items-center text-center border-r last:border-r-0 border-gray-200 hover:bg-white transition-colors group"
+                    >
+                      <div className="mb-4 text-black group-hover:text-red-600 transition-colors">
+                        <feat.icon size={40} strokeWidth={1.5} />
+                      </div>
+                      <h4 className="font-black text-gray-900 text-lg uppercase tracking-wide mb-2">{feat.title}</h4>
+                      <p className="text-sm text-gray-500 font-medium">{feat.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!['home', 'contact'].includes(activePage) && (
+              <div className="animate-fade-in pb-12">
+                <div className="mb-10 border-b-2 border-black pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                    <h2 className="text-4xl font-black text-black uppercase tracking-tighter">
+                      {pages.find((p) => p.id === activePage)?.title}
+                    </h2>
+                    <p className="text-gray-500 mt-2 font-medium">Selección Premium RRIMPORT</p>
+                  </div>
+                  <div className="bg-black text-white px-4 py-1 text-xs font-bold uppercase tracking-widest">Stock Disponible</div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                  {products[activePage]?.map((item) => (
+                    <ProductCard key={item.id} item={item} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activePage === 'contact' && (
+              <div className="max-w-4xl mx-auto w-full animate-fade-in pb-12">
+                <h2 className="text-3xl font-black text-black mb-8 uppercase tracking-tight">Tu Cotización</h2>
+
+                <div className="bg-white border-2 border-gray-100 shadow-xl overflow-hidden mb-8">
+                  {cart.length === 0 ? (
+                    <div className="p-20 text-center flex flex-col items-center">
+                      <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                        <ShoppingCart className="text-gray-300" size={48} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Carrito Vacío</h3>
+                      <p className="text-gray-500 mb-8 max-w-sm">Agrega productos de nuestra línea Hilux para generar tu cotización.</p>
+                      <button
+                        onClick={() => setActivePage('frontLight')}
+                        className="bg-black text-white px-8 py-3 font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors"
+                      >
+                        Ir a la Tienda
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="max-h-[60vh] overflow-y-auto bg-gray-50/50">
+                        <div className="divide-y divide-gray-200">
+                          {cart.map((item, idx) => (
+                            <div
+                              key={idx}
+                              className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white"
+                            >
+                              <div className="flex items-center space-x-4 mb-4 sm:mb-0">
+                                <div className="w-16 h-16 bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200">
+                                  <div className="w-8 h-8 bg-gray-300 rounded-full" />
+                                </div>
+                                <div>
+                                  <h4 className="font-bold text-gray-900 text-lg">{item.name}</h4>
+                                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">{item.id}</p>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center justify-between w-full sm:w-auto sm:space-x-12">
+                                <span className="font-black text-xl">S/ {item.price.toLocaleString()}</span>
+                                <button
+                                  onClick={() => removeFromCart(item.cartId)}
+                                  className="text-gray-400 hover:text-red-600 transition-colors"
+                                  title="Eliminar"
+                                >
+                                  <Trash2 size={20} />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-900 p-8 text-white">
+                        <div className="flex justify-between items-end mb-2">
+                          <span className="text-gray-400 font-medium uppercase tracking-widest text-sm">Total Estimado</span>
+                          <span className="font-black text-5xl tracking-tighter">S/ {calculateTotal().toLocaleString()}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 text-right mb-8">Precios sujetos a cambio sin previo aviso.</p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <button
+                            onClick={generateWhatsAppLink}
+                            className="flex items-center justify-center w-full py-4 bg-green-500 hover:bg-green-600 text-white font-bold uppercase tracking-widest transition-all shadow-lg hover:shadow-green-900/50"
+                          >
+                            <Phone className="mr-2" size={20} />
+                            Enviar a RRIMPORT
+                          </button>
+                          <button
+                            onClick={() => setCart([])}
+                            className="w-full py-4 bg-transparent border border-gray-700 text-gray-400 hover:text-white hover:border-white font-bold uppercase tracking-widest transition-colors"
+                          >
+                            Vaciar Carrito
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </main>
+
+          <footer className="py-12 bg-black text-white border-t border-gray-800 mt-auto">
+            <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-6 md:mb-0 text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start mb-2">
+                  <span className="text-2xl font-black italic tracking-tighter">RR</span>
+                  <span className="text-sm font-bold tracking-[0.3em] ml-2">IMPORT</span>
+                </div>
+                <p className="text-gray-500 text-sm">Innovación y calidad en autopartes.</p>
+              </div>
+              <div className="text-gray-600 text-xs text-center md:text-right">
+                <p>© 2025 RRIMPORT PERÚ.</p>
+                <p>Todos los derechos reservados.</p>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<CatalogApp />);
+  </script>
+</body>
+</html>
