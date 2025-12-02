@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RRIMPORT | Catálogo Hilux 2021-2023</title>
   <meta name="description" content="Catálogo interactivo de carrocería e iluminación RRIMPORT para Toyota Hilux 2021-2023." />
-  <link rel="preconnect" href="https://esm.sh" />
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+  
+  <!-- Estilos -->
   <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -19,14 +20,20 @@
       }
     }
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Babel para traducir JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-white text-gray-900">
   <div id="root"></div>
 
-  <script type="module">
-    import React, { useEffect, useState } from 'https://esm.sh/react@18.3.1';
-    import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client';
+  <!-- Script Principal -->
+  <script type="text/babel" data-type="module">
+    // Importamos React y ReactDOM en modo desarrollo (?dev) para evitar errores de minificación
+    import React, { useEffect, useState } from 'https://esm.sh/react@18.3.1?dev';
+    import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client?dev';
+    
+    // Importamos los iconos asegurando que usen LA MISMA versión de React (?deps=react@18.3.1)
     import {
       ShoppingCart,
       Menu,
@@ -38,7 +45,7 @@
       Trash2,
       CheckCircle,
       Zap
-    } from 'https://esm.sh/lucide-react@0.424.0?dev';
+    } from 'https://esm.sh/lucide-react@0.424.0?deps=react@18.3.1&dev';
 
     const CatalogApp = () => {
       const [activePage, setActivePage] = useState('home');
