@@ -1,0 +1,16 @@
+{
+  "name": "catalogsrr",
+  "version": "1.0.0",
+  "description": "Catálogo estático de RRIMPORT listo para GitHub Pages.",
+  "scripts": {
+    "start": "python -m http.server 4173 -d public"
+  },
+  "keywords": [
+    "rrimport",
+    "github-pages",
+    "catalog"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "type": "commonjs"
+}
